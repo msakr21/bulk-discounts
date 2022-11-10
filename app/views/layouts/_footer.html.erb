@@ -3,7 +3,7 @@
     <h4> Repo: <%= name %></h4>
   </div>
   <div class="group">
-<% elsif group.present? %>
+<% elsif group["message"] == nil %>
   <h4> Group Members: </h4>
   <% group.each do |member| %>
     <p> <%= member %> </p>
