@@ -1,4 +1,4 @@
-# require './lib/git_repo'
+require './lib/git_repo'
 
 class ApplicationController < ActionController::Base
   # before_action :repo_info, :only => [:index, :show, :edit, :new]
