@@ -3,14 +3,14 @@
     <h4> Repo: <%= name %></h4>
   </div>
   <div class="group">
-<% elsif group["message"] == nil %>
+<% elsif group.class != Hash && group != nil%>
   <h4> Group Members: </h4>
   <% group.each do |member| %>
     <p> <%= member %> </p>
   <% end %>
   </div>
   <div class="commits">
-<% elsif group.present? && contributions.present? %>
+<% elsif group.class != Hash && group != Hash && contributions != {} %>
   <h4> Commits by Group Member: </h4>
   <% contributions.each do |member, commits| %>
     <% if group.include?(member) %>

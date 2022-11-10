@@ -16,8 +16,8 @@ class GitRepo
 
   def usernames
     response = call("https://api.github.com/repos/kenzjoy/little-esty-shop/assignees")
-    if response["message"] == nil
-      parsed = JSON.parse(response.body, symbolize_names: true)
+    parsed = JSON.parse(response.body, symbolize_names: true)
+    if parsed.class != Hash
       parsed.map do |user|
         user[:login]
       end
@@ -26,20 +26,20 @@ class GitRepo
 
   def commits_by_contributors
     response = call("https://api.github.com/repos/kenzjoy/little-esty-shop/stats/contributors")
-    if response["message"] == nil
-      parsed = JSON.parse(response.body, symbolize_names: true)
-      contributor_commit_totals = {}
+    parsed = JSON.parse(response.body, symbolize_names: true)
+    contributor_commit_totals = {}
+    if parsed.class != Hash
       parsed.each do |record|
         contributor_commit_totals[record[:author][:login]] = record[:total]
       end
-      contributor_commit_totals
     end
+    contributor_commit_totals
   end
 
   def number_of_pull_requests
     response = call("https://api.github.com/repos/kenzjoy/little-esty-shop/pulls?state=all")
-    if response["message"] == nil
-      parsed = JSON.parse(response.body, symbolize_names: true)
+    parsed = JSON.parse(response.body, symbolize_names: true)
+    if parsed.class != Hash
       parsed.first[:number]
     end
   end
