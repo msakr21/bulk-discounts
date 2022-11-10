@@ -11,7 +11,7 @@
   </div>
   <div class="commits">
   <h4> Commits by Group Member: </h4>
-<% elsif group.class != Hash && group != Hash && contributions != {} %>
+<% elsif group.class != Hash && group != Hash && contributions != {} && contributions != nil %>
   <% contributions.each do |member, commits| %>
     <% if group.include?(member) %>
       <p> Member: <%= member %>, Commits: <%= commits %> </p>
