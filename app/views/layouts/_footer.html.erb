@@ -1,17 +1,17 @@
   <div class="repo">
-<% if name.present? %>
+  <% if name.present? %>
     <h4> Repo: <%= name %></h4>
   </div>
   <div class="group">
-<% elsif group.class != Hash && group != nil%>
   <h4> Group Members: </h4>
+<% elsif group.class != Hash && group != nil%>
   <% group.each do |member| %>
     <p> <%= member %> </p>
   <% end %>
   </div>
   <div class="commits">
-<% elsif group.class != Hash && group != Hash && contributions != {} %>
   <h4> Commits by Group Member: </h4>
+<% elsif group.class != Hash && group != Hash && contributions != {} %>
   <% contributions.each do |member, commits| %>
     <% if group.include?(member) %>
       <p> Member: <%= member %>, Commits: <%= commits %> </p>
