@@ -26,7 +26,10 @@ Rails.application.routes.draw do
   patch '/admin/invoices/:id', to: 'admin/invoices#update'
 
   resources :admin, only: [:index]
-  # get '/admin', to: 'admin#index'
 
   patch '/admin/merchants/:id', to: 'admin/merchants#update'
+
+  resources :merchants, except: [:update] do
+    resources :bulk_discounts, except: [:update]
+  end
 end

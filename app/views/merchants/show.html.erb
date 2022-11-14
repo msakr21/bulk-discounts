@@ -1,5 +1,7 @@
 <%= render partial: "layouts/merchant_header", locals: {page_name: @merchant.name, merchant_id: @merchant.id}%>
 
+<h2>  <%= link_to "View My Bulk Discounts", merchant_bulk_discounts_path(@merchant) %></h2>
+
 <h2> Favorite Customers: </h2>
 <% @favorite_customers.each do |customer, count|%>
   <p> <%= "Name: #{customer}, Number of Transactions: #{count}" %> </p>
