@@ -1,29 +1,25 @@
 require 'rails_helper' 
 
-RSpec.describe 'create new merchant page', type: :feature do
-  describe 'as an admin' do
-    describe 'when I click on the (create new merchant) link on the admin merchants index page' do
-      it 'takes me to a form that allows me to add new merchant information' do
-        visit new_merchant_path
+RSpec.describe 'create new merchant bulk discount' do
+  it 'when the form is filled and submitted, a new bulk discount is created for the merchant and the merchant is redirected to the bulk discount index' do
 
-        expect(page).to have_selector(:css, "form")
-        expect(page).to have_field("New Merchant Name")
-        expect(page).to have_button("Submit")
-      end
+    crystal_moon = Merchant.create!(name: "Crystal Moon Designs")
+    default_price_1 = crystal_moon.bulk_discounts.create!(amount: 0, threshold: 0)
 
-      it 'when I fill out the form and click (submit), I am taken back to the admin merchants index page. I can see 
-      the merchant I just created displayed on the admin merchants index page, and its default status is disabled' do
-        visit new_merchant_path
+    visit merchant_bulk_discounts_path(crystal_moon)
 
-        fill_in "New Merchant Name:", with: "Susan's Snappy Stitches"
-        click_button "Submit"
+    expect(page).to have_link("No Discount")
+    expect(page).to_not have_link("10%")
 
-        expect(current_path).to eq(admin_merchants_path)
+    visit new_merchant_bulk_discount_path(crystal_moon)
 
-        within "#merchant-disabled" do
-          expect(page).to have_content("Susan's Snappy Stitches")
-        end
-      end
-    end
+    fill_in "discount_amount", with: 10
+    fill_in "quantity_threshold", with: 15
+    click_button "Submit"
+
+    expect(current_path).to eql(merchant_bulk_discounts_path(crystal_moon))
+
+    expect(page).to have_link("No Discount")
+    expect(page).to have_link("10%")
   end
 end
