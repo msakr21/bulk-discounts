@@ -1,12 +1,23 @@
 require 'rails_helper'
 
-RSpec.describe "the merchant's dashboard page" do
+RSpec.describe 'bulk discounts index page', type: :feature do
   before :each do
     @crystal_moon = Merchant.create!(name: "Crystal Moon Designs")
     @surf_designs = Merchant.create!(name: "Surf & Co. Designs")
+    @merchant_3 = Merchant.create!(name: 'Outer Outfitters')
+    @merchant_4 = Merchant.create!(name: 'The Toy Box')
+    @merchant_5 = Merchant.create!(name: 'Chiseled Features')
+    @merchant_6 = Merchant.create!(name: 'Quilting Corner')
 
-    @default_price_1 = @crystal_moon.bulk_discounts.create!(amount: 0, threshold:0)
-    @default_price_2 = @surf_designs.bulk_discounts.create!(amount: 0, threshold:0)
+    @default_price_1 = @crystal_moon.bulk_discounts.create!(amount: 0, threshold: 0)
+    @default_price_2 = @surf_designs.bulk_discounts.create!(amount: 0, threshold: 0)
+    @default_price_3 = @merchant_3.bulk_discounts.create!(amount: 0, threshold: 0)
+    @default_price_4 = @merchant_4.bulk_discounts.create!(amount: 0, threshold: 0)
+    @default_price_5 = @merchant_5.bulk_discounts.create!(amount: 0, threshold: 0)
+    @default_price_6 = @merchant_6.bulk_discounts.create!(amount: 0, threshold: 0)
+    @discount_price_1 = @crystal_moon.bulk_discounts.create!(amount: 10, threshold: 10)
+    @discount_price_2 = @surf_designs.bulk_discounts.create!(amount: 15, threshold: 10)
+    @surprise_and_delight = @crystal_moon.bulk_discounts.create!(amount: 20, threshold: 15)
 
     @pearl = @crystal_moon.items.create!(name: "Pearl", description: "Not a BlackPearl!", unit_price: 25)
     @moon_rock = @crystal_moon.items.create!(name: "Moon Rock", description: "Evolve Your Pokemon!", unit_price: 105)
@@ -24,6 +35,9 @@ RSpec.describe "the merchant's dashboard page" do
     @zinc = @surf_designs.items.create!(name: "100% Zinc Face Protectant", description: "Our original organic formula!", unit_price: 13)
     @surf_board = @surf_designs.items.create!(name: "Surf Board", description: "Our original 12' board!", unit_price: 200)
     @snorkel = @surf_designs.items.create!(name: "Snorkel", description: "Perfect for reef viewing!", unit_price: 400)
+    @ball = @merchant_4.items.create!(name: "Ball", description: "Super bouncy", unit_price: 100)
+    @statuette = @merchant_5.items.create!(name: "Statuette", description: "Carved from marble", unit_price: 200)
+    @quilt = @merchant_6.items.create!(name: "Quilt", description: "Colorful and soft", unit_price: 300)
 
     @paul = Customer.create!(first_name: "Paul", last_name: "Walker")
     @sam = Customer.create!(first_name: "Sam", last_name: "Gamgee")
@@ -31,6 +45,7 @@ RSpec.describe "the merchant's dashboard page" do
     @hamada = Customer.create!(first_name: "Hamada", last_name: "Hilal")
     @frodo = Customer.create!(first_name: "Frodo", last_name: "Baggins")
     @eevee = Customer.create!(first_name: "Eevee", last_name: "Ketchup")
+    @dude = Customer.create!(first_name: "Dude", last_name: "Bruh")
 
     @invoice_1 = Invoice.create!(status: 2, customer_id: @paul.id)
     @invoice_2 = Invoice.create!(status: 2, customer_id: @paul.id)
@@ -54,6 +69,7 @@ RSpec.describe "the merchant's dashboard page" do
     @invoice_20 = Invoice.create!(status: 2, customer_id: @frodo.id)
     @invoice_21 = Invoice.create!(status: 2, customer_id: @paul.id)
     @invoice_22 = Invoice.create!(status: 2, customer_id: @eevee.id)
+    @invoice_23 = Invoice.create!(status: 2, customer_id: @dude.id)
 
     @pearl_invoice = InvoiceItem.create!(item_id: @pearl.id, invoice_id: @invoice_1.id, quantity: 2, unit_price: 25, status: 1, bulk_discount_id: @default_price_1.id)
     @moon_rock_invoice = InvoiceItem.create!(item_id: @moon_rock.id, invoice_id: @invoice_2.id, quantity: 2, unit_price: 105, status: 1, bulk_discount_id: @default_price_1.id)
@@ -70,7 +86,10 @@ RSpec.describe "the merchant's dashboard page" do
     @rash_guard_invoice = InvoiceItem.create!(item_id: @rash_guard.id, invoice_id: @invoice_13.id, quantity: 2, unit_price: 50, status: 2, bulk_discount_id: @default_price_2.id)
     @zinc_invoice = InvoiceItem.create!(item_id: @zinc.id, invoice_id: @invoice_14.id, quantity: 2, unit_price: 13, status: 1, bulk_discount_id: @default_price_2.id)
     @surf_board_invoice = InvoiceItem.create!(item_id: @surf_board.id, invoice_id: @invoice_6.id, quantity: 2, unit_price: 200, status: 1, bulk_discount_id: @default_price_2.id)
-    @snorkel_invoice = InvoiceItem.create!(item_id: @snorkel.id, invoice_id: @invoice_6.id, quantity: 3, unit_price: 400, status: 1, bulk_discount_id: @default_price_2.id)
+    @ball_invoice = InvoiceItem.create!(item_id: @ball.id, invoice_id: @invoice_6.id, quantity: 1, unit_price: 100, status: 1, bulk_discount_id: @default_price_4.id)
+    @statuette_invoice = InvoiceItem.create!(item_id: @statuette.id, invoice_id: @invoice_6.id, quantity: 1, unit_price: 200, status: 1, bulk_discount_id: @default_price_5.id)
+    @quilt_invoice = InvoiceItem.create!(item_id: @quilt.id, invoice_id: @invoice_6.id, quantity: 1, unit_price: 300, status: 1, bulk_discount_id: @default_price_6.id)
+    @moon_rock_invoice_2 = InvoiceItem.create!(item_id: @moon_rock.id, invoice_id: @invoice_23.id, quantity: 2, unit_price: 105, status: 1, bulk_discount_id: @default_price_1.id)
 
     @transaction_1 = Transaction.create!(result: 1, invoice_id: @invoice_1.id, credit_card_number: 0001)
     @transaction_2 = Transaction.create!(result: 1, invoice_id: @invoice_2.id, credit_card_number: 0002)
@@ -94,81 +113,24 @@ RSpec.describe "the merchant's dashboard page" do
     @transaction_20 = Transaction.create!(result: 1, invoice_id: @invoice_20.id, credit_card_number: 0016)
     @transaction_21 = Transaction.create!(result: 0, invoice_id: @invoice_21.id, credit_card_number: 0016)
     @transaction_22 = Transaction.create!(result: 0, invoice_id: @invoice_17.id, credit_card_number: 0016)
+    @transaction_23 = Transaction.create!(result: 1, invoice_id: @invoice_23.id, credit_card_number: 0016)
   end
 
-  it "shows the merchant's name" do
-    @crystal_moon = Merchant.create!(name: "Crystal Moon Designs")
+  it "displays a list of the merchant's bulk discounts" do
+    visit merchant_bulk_discounts_path(@crystal_moon)
 
-    visit "/merchants/#{@crystal_moon.id}/dashboard"
+    expect(page).to have_content("No Discount, Quantity Threshold: 0")
+    expect(page).to have_link("No Discount")
+    expect(page).to have_content("10%, Quantity Threshold: 10")
+    expect(page).to have_link("10%")
+    expect(page).to have_content("20%, Quantity Threshold: 15")
+    expect(page).to have_link("20%")
 
-    expect(page).to have_content("Crystal Moon Designs")
-  end
+    visit merchant_bulk_discounts_path(@surf_designs)
 
-  it 'displays links to the merchant items index and the merchant invoices index' do
-    merchant_1 = Merchant.create!(name: "Test Merchant")
-    visit "/merchants/#{merchant_1.id}/dashboard"
-
-    expect(page).to have_link("Merchant Items")
-    click_link("Merchant Items")
-    expect(current_path).to eq("/merchants/#{merchant_1.id}/items")
-
-    visit "/merchants/#{merchant_1.id}/dashboard"
-
-    expect(page).to have_link("Merchant Invoices")
-    click_link("Merchant Invoices")
-    expect(current_path).to eq("/merchants/#{merchant_1.id}/invoices")
-  end
-
-  it "shows the top 5 favorite customers and number of @transactions they've had" do
-
-
-    visit "/merchants/#{@crystal_moon.id}/dashboard"
-
-    expect(page).to have_content("Name: Paul, Number of Transactions: 2")
-    expect(page).to have_content("Name: Frodo, Number of Transactions: 2")
-    expect(page).to have_content("Name: Hamada, Number of Transactions: 2")
-    expect(page).to have_content("Name: Abbas, Number of Transactions: 2")
-    expect(page).to have_content("Name: Sam, Number of Transactions: 2")
-    expect(page).to_not have_content("Eevee")
-  end
-
-  it "shows a list of the names of all items and their invoice id that have been ordered and have not yet been shipped" do
-    visit "/merchants/#{@crystal_moon.id}/dashboard"
-
-    expect(page).to have_content("Items Ready to Ship")
-    expect(page).to have_content("Pearl")
-    expect(page).to have_content("Moon Rock")
-    expect(page).to have_content("Lapis Lazuli")
-    expect(page).to have_content("Topaz")
-    expect(page).to have_content(@pearl_invoice.invoice_id)
-    expect(page).to have_content(@moon_rock_invoice.invoice_id)
-    expect(page).to have_content(@lapis_lazuli_invoice.invoice_id)
-    expect(page).to have_content(@topaz_invoice.invoice_id)
-  end
-
-  it "each invoice id is a link to my merchant's invoice show page" do
-    visit "/merchants/#{@crystal_moon.id}/dashboard"
-
-    expect(page).to have_link("#{@pearl_invoice.invoice_id}")
-    click_link(@pearl_invoice.invoice_id)
-    expect(current_path).to eql("/merchants/#{@crystal_moon.id}/invoices/#{@pearl_invoice.invoice_id}")
-  end
-
-  it "displays the date that each invoice was created, ordered from oldest to newest" do
-    visit "/merchants/#{@crystal_moon.id}/dashboard"
-
-    expect(page).to have_content(@crystal_moon.items_ready_to_ship.first[:created_at].strftime("%A, %B%e, %Y"))
-
-    expect("Pearl").to appear_before("Moon Rock")
-    expect("Moon Rock").to appear_before("Lapis Lazuli")
-    expect("Lapis Lazuli").to appear_before("Topaz")
-  end
-
-  it "has a link to view all of the merchant's discounts" do
-    visit "/merchants/#{@crystal_moon.id}/dashboard"
-
-    expect(page).to have_link("View My Bulk Discounts")
-    click_link "View My Bulk Discounts"
-    expect(current_path).to eql(merchant_bulk_discounts_path(@crystal_moon))
+    expect(page).to have_content("No Discount, Quantity Threshold: 0")
+    expect(page).to have_link("No Discount")
+    expect(page).to have_content("15%, Quantity Threshold: 10")
+    expect(page).to have_link("15%")
   end
 end

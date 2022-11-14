@@ -1,0 +1,14 @@
+<%= render partial: "layouts/merchant_header", locals: {page_name: @merchant.name, merchant_id: @merchant.id}%>
+
+<h1><%= @merchant.name %> Bulk Discounts </h1>
+
+<div id="discount_list">
+  <h2>--- Bulk Discounts List ---</h2>
+    <% @bulk_discounts.each do |discount|%>
+      <% if discount.amount == 0 %>
+        <p> <%= link_to "No Discount", merchant_bulk_discount_path(@merchant, discount)%>, <%= "Quantity Threshold: #{discount.threshold}" %></p>
+      <% else %>
+        <p> <%= link_to "#{discount.amount}%", merchant_bulk_discount_path(@merchant, discount)%>, <%= "Quantity Threshold: #{discount.threshold}" %></p>
+      <%end%>
+    <%end%>
+</div>
