@@ -133,4 +133,12 @@ RSpec.describe 'bulk discounts index page', type: :feature do
     expect(page).to have_content("15%, Quantity Threshold: 10")
     expect(page).to have_link("15%")
   end
+
+  it "has a link to create a new discount" do
+    visit merchant_bulk_discounts_path(@crystal_moon)
+
+    expect(page).to have_link("Create New Discount")
+    click_link "Create New Discount"
+    expect(current_path).to eql(new_merchant_bulk_discount_path(@crystal_moon))
+  end
 end
