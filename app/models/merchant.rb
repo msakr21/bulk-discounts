@@ -4,6 +4,7 @@ class Merchant < ApplicationRecord
   has_many :transactions, through: :invoices
   has_many :customers, through: :invoices
   has_many :invoice_items, through: :items
+  has_many :bulk_discounts
 
   enum status: [ :disabled, :enabled ]
   validates :name, presence: true, length: { maximum: 50 }
@@ -30,10 +31,8 @@ class Merchant < ApplicationRecord
   end
 
   def top_5_items
-    # require "pry"; binding.pry
-
-    Item.joins([:merchant, {invoices: :transactions}])
-        .where(merchants: {id: self.id}, transactions: {result: 1}, invoices: {status: 2})
+    Item.joins(invoices: :transactions)
+        .where(items: {merchant_id: self.id}, transactions: {result: 1}, invoices: {status: 2})
         .select('items.*, sum(quantity * invoice_items.unit_price) as revenue')
         .group('items.id')
         .order('revenue DESC')
@@ -50,13 +49,12 @@ class Merchant < ApplicationRecord
   end
 
   def top_selling_date
-    invoices
-    .where("invoices.status = ?", 2)
-    .select('invoices.*, sum(quantity * invoice_items.unit_price) as sum_id')
-    .group(:id)
-    .order('sum_id desc')
-    .first
-    .updated_at
+    invoices.where("invoices.status = 2")
+            .joins(:invoice_items)
+            .select('invoices.created_at, sum(invoice_items.unit_price * invoice_items.quantity) as revenue')
+            .group("invoices.created_at")
+            .order("revenue desc", "invoices.created_at desc")
+            .first&.created_at&.to_date
   end
 
   def total_revenue

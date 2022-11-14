@@ -19,8 +19,6 @@ class Invoice < ApplicationRecord
   end
 
   def admin_total_revenue
-    invoice_items
-    .joins(:item)
-    .sum("quantity * invoice_items.unit_price")
+    invoice_items.sum("quantity * invoice_items.unit_price")
   end
 end
