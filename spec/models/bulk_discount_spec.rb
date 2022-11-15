@@ -7,7 +7,7 @@ RSpec.describe BulkDiscount, type: :model do
   end
 
   describe '#check_against_threshold' do
-    before :each do
+   before :each do
       @crystal_moon = Merchant.create!(name: "Crystal Moon Designs")
       @surf_designs = Merchant.create!(name: "Surf & Co. Designs")
   
@@ -107,6 +107,14 @@ RSpec.describe BulkDiscount, type: :model do
       @transaction_22 = Transaction.create!(result: 0, invoice_id: @invoice_17.id, credit_card_number: 0016)
     end
     
+    it "updates all invoice items that haven't been shipped, are part of incomplete invoices, and whose quantity exceeds the merchant's bulk discount thresholds but whose current bulk_discount threshold is not higher" do
+      expect(@discount_price_1.update_matching_invoice_items).to eq(3)
+
+      surprise_and_delight = @surf_designs.bulk_discounts.create!(amount: 20, threshold: 15)
+
+      expect(surprise_and_delight.update_matching_invoice_items).to eq(1)
+    end
+
     it "updates all invoice items that haven't been shipped, are part of incomplete invoices, and whose quantity exceeds the merchant's bulk discount thresholds but whose current bulk_discount threshold is not higher" do
       expect(@discount_price_1.update_matching_invoice_items).to eq(3)
 
