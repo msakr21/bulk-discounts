@@ -7,7 +7,8 @@ class InvoicesController < ApplicationController
   def show
     @merchant = Merchant.find(params[:merchant_id])
     @invoice = Invoice.find(params[:id])
-    @total_revenue = (@invoice.total_revenue(@merchant.id).to_f)/100
+    @total_revenue = (@invoice.total_revenue(params[:merchant_id]).to_f)/100
+    @discounted_total_revenue = (@invoice.total_revenue(params[:merchant_id]).to_f)/100 - (@invoice.discount_from_total_revenue(params[:merchant_id]).to_f)/100
   end
 
   def update

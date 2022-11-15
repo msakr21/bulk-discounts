@@ -14,6 +14,8 @@ RSpec.describe InvoiceItem, type: :model do
 
       @default_price_1 = @crystal_moon.bulk_discounts.create!(amount: 0, threshold:0)
       @default_price_2 = @surf_designs.bulk_discounts.create!(amount: 0, threshold:0)
+      @discount_price_1 = @crystal_moon.bulk_discounts.create!(amount: 10, threshold: 10)
+      @surprise_and_delight = @crystal_moon.bulk_discounts.create!(amount: 20, threshold: 15)
 
       @pearl = @crystal_moon.items.create!(name: "Pearl", description: "Not a BlackPearl!", unit_price: 25)
       @moon_rock = @crystal_moon.items.create!(name: "Moon Rock", description: "Evolve Your Pokemon!", unit_price: 105)
@@ -30,6 +32,7 @@ RSpec.describe InvoiceItem, type: :model do
       @rash_guard = @surf_designs.items.create!(name: "Radical Rash Guard", description: "Stay totally groovy and rash free!", unit_price: 50)
       @zinc = @surf_designs.items.create!(name: "100% Zinc Face Protectant", description: "Our original organic formula!", unit_price: 13)
       @surf_board = @surf_designs.items.create!(name: "Surf Board", description: "Our original 12' board!", unit_price: 200)
+      @snorkel = @surf_designs.items.create!(name: "Snorkel", description: "Perfect for reef viewing!", unit_price: 400)
 
       @paul = Customer.create!(first_name: "Paul", last_name: "Walker")
       @sam = Customer.create!(first_name: "Sam", last_name: "Gamgee")
@@ -76,6 +79,7 @@ RSpec.describe InvoiceItem, type: :model do
       @rash_guard_invoice = InvoiceItem.create!(item_id: @rash_guard.id, invoice_id: @invoice_13.id, quantity: 2, unit_price: 50, status: 2, bulk_discount_id: @default_price_2.id)
       @zinc_invoice = InvoiceItem.create!(item_id: @zinc.id, invoice_id: @invoice_14.id, quantity: 2, unit_price: 13, status: 1, bulk_discount_id: @default_price_2.id)
       @surf_board_invoice = InvoiceItem.create!(item_id: @surf_board.id, invoice_id: @invoice_6.id, quantity: 2, unit_price: 200, status: 1, bulk_discount_id: @default_price_2.id)
+      @snorkel_invoice = InvoiceItem.create!(item_id: @snorkel.id, invoice_id: @invoice_6.id, quantity: 11, unit_price: 400, status: 2, bulk_discount_id: @default_price_2.id)
 
       @transaction_1 = Transaction.create!(result: 1, invoice_id: @invoice_1.id, credit_card_number: 0001)
       @transaction_2 = Transaction.create!(result: 1, invoice_id: @invoice_2.id, credit_card_number: 0002)

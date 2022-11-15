@@ -1,7 +1,7 @@
 require 'rails_helper' 
 
-RSpec.describe 'new merchant bulk discount page' do
-  it 'takes me to a form that allows me to add new merchant information' do
+RSpec.describe 'edit merchant bulk discount page' do
+  it 'takes me to a form that allows me to edit bulk discount' do
     crystal_moon = Merchant.create!(name: "Crystal Moon Designs")
 
     visit new_merchant_bulk_discount_path(crystal_moon)

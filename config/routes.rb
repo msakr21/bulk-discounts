@@ -32,4 +32,6 @@ Rails.application.routes.draw do
   resources :merchants, except: [:update] do
     resources :bulk_discounts, except: [:update]
   end
+
+  patch '/merchants/:merchant_id/bulk_discounts/:id', to: 'bulk_discounts#update'
 end
