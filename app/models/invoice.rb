@@ -21,4 +21,11 @@ class Invoice < ApplicationRecord
   def admin_total_revenue
     invoice_items.sum("quantity * invoice_items.unit_price")
   end
+
+  # def check_against_threshold(merchant_id)
+  #   binding.pry
+  #   BulkDiscount
+  #   invoice_items.joins(:item, :bulk_discount).where("items.merchant_id = ? AND invoice_items.quantity >= bulk_discounts.threshold", merchant_id)
+  #   .sum("quantity * invoice_items.unit_price")
+  # end
 end

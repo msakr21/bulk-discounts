@@ -9,7 +9,7 @@ class BulkDiscountsController < ApplicationController
   end
 
   def create
-    BulkDiscount.create!(amount: params[:discount_amount], threshold: params[:quantity_threshold], merchant_id: params[:merchant_id])
+    discount = BulkDiscount.create!(amount: params[:discount_amount], threshold: params[:quantity_threshold], merchant_id: params[:merchant_id])
 
     redirect_to merchant_bulk_discounts_path(params[:merchant_id])
   end
