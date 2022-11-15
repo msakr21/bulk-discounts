@@ -141,4 +141,11 @@ RSpec.describe 'bulk discounts index page', type: :feature do
     click_link "Create New Discount"
     expect(current_path).to eql(new_merchant_bulk_discount_path(@crystal_moon))
   end
+
+  it 'has a link next to each bulk discount to delete it' do
+    visit merchant_bulk_discounts_path(@crystal_moon)
+    
+    expect(page).to have_link("Delete")
+    expect(page).to have_link("Delete")
+  end
 end
