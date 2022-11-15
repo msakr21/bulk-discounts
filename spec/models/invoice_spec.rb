@@ -80,7 +80,7 @@ RSpec.describe Invoice, type: :model do
       @rash_guard_invoice = InvoiceItem.create!(item_id: @rash_guard.id, invoice_id: @invoice_13.id, quantity: 2, unit_price: 50, status: 2, bulk_discount_id: @default_price_2.id)
       @zinc_invoice = InvoiceItem.create!(item_id: @zinc.id, invoice_id: @invoice_14.id, quantity: 2, unit_price: 13, status: 1, bulk_discount_id: @default_price_2.id)
       @surf_board_invoice = InvoiceItem.create!(item_id: @surf_board.id, invoice_id: @invoice_6.id, quantity: 2, unit_price: 200, status: 1, bulk_discount_id: @default_price_2.id)
-      @snorkel_invoice = InvoiceItem.create!(item_id: @snorkel.id, invoice_id: @invoice_6.id, quantity: 11, unit_price: 400, status: 1, bulk_discount_id: @default_price_2.id)
+      @snorkel_invoice = InvoiceItem.create!(item_id: @snorkel.id, invoice_id: @invoice_6.id, quantity: 11, unit_price: 400, status: 1, bulk_discount_id: @discount_price_1.id)
 
 
       @transaction_1 = Transaction.create!(result: 1, invoice_id: @invoice_1.id, credit_card_number: 0001)
@@ -126,10 +126,10 @@ RSpec.describe Invoice, type: :model do
       end
     end
 
-    # describe '#check_against_threshold' do
-    #   it "returns an array of invoice items whose quantity exceeds one of the merchant's bulk discount thresholds" do
-    #     expect(@invoice_6.check_against_threshold(@surf_designs.id)).to eq([@snorkel_invoice])
-    #   end
-    # end
+    describe '#discount_from_total_revenue(merchant_id)' do
+      it 'gives us the the discount on total revenue generated from all of the merchant items on the invoice' do
+        expect(@invoice_6.discount_from_total_revenue(@surf_designs.id)).to eq(440)
+      end
+    end
   end
 end

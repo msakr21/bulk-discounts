@@ -74,7 +74,7 @@ RSpec.describe 'merchant invoices show page' do
         @rash_guard_invoice = InvoiceItem.create!(item_id: @rash_guard.id, invoice_id: @invoice_13.id, quantity: 2, unit_price: 50, status: 2, bulk_discount_id: @default_price_2.id)
         @zinc_invoice = InvoiceItem.create!(item_id: @zinc.id, invoice_id: @invoice_14.id, quantity: 2, unit_price: 13, status: 1, bulk_discount_id: @default_price_2.id)
         @surf_board_invoice = InvoiceItem.create!(item_id: @surf_board.id, invoice_id: @invoice_6.id, quantity: 2, unit_price: 200, status: 1, bulk_discount_id: @default_price_2.id)
-        @snorkel_invoice = InvoiceItem.create!(item_id: @snorkel.id, invoice_id: @invoice_6.id, quantity: 11, unit_price: 400, status: 1, bulk_discount_id: @default_price_2.id)
+        @snorkel_invoice = InvoiceItem.create!(item_id: @snorkel.id, invoice_id: @invoice_6.id, quantity: 11, unit_price: 400, status: 1, bulk_discount_id: @discount_price_1.id)
 
   
         @transaction_1 = Transaction.create!(result: 1, invoice_id: @invoice_1.id, credit_card_number: 0001)
@@ -131,16 +131,16 @@ RSpec.describe 'merchant invoices show page' do
         expect(page).to have_select("status", selected: "Packaged")
       end
 
-      xit 'displays the total revenue generated from all of the merchant items on the invoice' do
+      it 'displays the total revenue generated from all of the merchant items on the invoice' do
         visit merchant_invoice_path(@surf_designs, @invoice_6)
 
         expect(page).to have_content("Total Revenue for Invoice #{@invoice_6.id}: $48.0")
       end
 
-      it 'displays the discounted total revenue generated from all of the merchant items on the invoice' do
+      it 'displays the discount on total revenue generated from all of the merchant items on the invoice' do
         visit merchant_invoice_path(@surf_designs, @invoice_6)
         
-        expect(page).to have_content("Discounted Total Revenue for Invoice #{@invoice_6.id}: $43.2")
+        expect(page).to have_content("Discounted Total Revenue for Invoice #{@invoice_6.id}: $43.6")
       end
     end
   end

@@ -32,6 +32,7 @@ RSpec.describe InvoiceItem, type: :model do
       @rash_guard = @surf_designs.items.create!(name: "Radical Rash Guard", description: "Stay totally groovy and rash free!", unit_price: 50)
       @zinc = @surf_designs.items.create!(name: "100% Zinc Face Protectant", description: "Our original organic formula!", unit_price: 13)
       @surf_board = @surf_designs.items.create!(name: "Surf Board", description: "Our original 12' board!", unit_price: 200)
+      @snorkel = @surf_designs.items.create!(name: "Snorkel", description: "Perfect for reef viewing!", unit_price: 400)
 
       @paul = Customer.create!(first_name: "Paul", last_name: "Walker")
       @sam = Customer.create!(first_name: "Sam", last_name: "Gamgee")

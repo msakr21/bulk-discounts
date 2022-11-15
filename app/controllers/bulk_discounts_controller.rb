@@ -11,6 +11,8 @@ class BulkDiscountsController < ApplicationController
   def create
     discount = BulkDiscount.create!(amount: params[:discount_amount], threshold: params[:quantity_threshold], merchant_id: params[:merchant_id])
 
+    discount.update_matching_invoice_items
+
     redirect_to merchant_bulk_discounts_path(params[:merchant_id])
   end
 

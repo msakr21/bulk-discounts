@@ -13,7 +13,7 @@ class Invoice < ApplicationRecord
 
   def total_revenue(merchant_id)
     invoice_items
-    .joins(:item)
+    .joins(:item, :bulk_discount)
     .where("items.merchant_id = ?", merchant_id)
     .sum("quantity * invoice_items.unit_price")
   end
@@ -22,10 +22,7 @@ class Invoice < ApplicationRecord
     invoice_items.sum("quantity * invoice_items.unit_price")
   end
 
-  # def check_against_threshold(merchant_id)
-  #   binding.pry
-  #   BulkDiscount
-  #   invoice_items.joins(:item, :bulk_discount).where("items.merchant_id = ? AND invoice_items.quantity >= bulk_discounts.threshold", merchant_id)
-  #   .sum("quantity * invoice_items.unit_price")
-  # end
+  def discount_from_total_revenue(merchant_id)
+    invoice_items.joins(:item, :bulk_discount).where("items.merchant_id = ?", merchant_id).sum("quantity * invoice_items.unit_price * bulk_discounts.amount / 100")
+  end
 end
