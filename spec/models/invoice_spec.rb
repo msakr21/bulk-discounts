@@ -16,6 +16,7 @@ RSpec.describe Invoice, type: :model do
       @default_price_1 = @crystal_moon.bulk_discounts.create!(amount: 0, threshold:0)
       @default_price_2 = @surf_designs.bulk_discounts.create!(amount: 0, threshold:0)
       @discount_price_1 = @crystal_moon.bulk_discounts.create!(amount: 10, threshold: 10)
+      @discount_price_2 = @surf_designs.bulk_discounts.create!(amount: 10, threshold: 10)
       @surprise_and_delight = @crystal_moon.bulk_discounts.create!(amount: 20, threshold: 15)
 
       @pearl = @crystal_moon.items.create!(name: "Pearl", description: "Not a BlackPearl!", unit_price: 25)
@@ -80,7 +81,7 @@ RSpec.describe Invoice, type: :model do
       @rash_guard_invoice = InvoiceItem.create!(item_id: @rash_guard.id, invoice_id: @invoice_13.id, quantity: 2, unit_price: 50, status: 2, bulk_discount_id: @default_price_2.id)
       @zinc_invoice = InvoiceItem.create!(item_id: @zinc.id, invoice_id: @invoice_14.id, quantity: 2, unit_price: 13, status: 1, bulk_discount_id: @default_price_2.id)
       @surf_board_invoice = InvoiceItem.create!(item_id: @surf_board.id, invoice_id: @invoice_6.id, quantity: 2, unit_price: 200, status: 1, bulk_discount_id: @default_price_2.id)
-      @snorkel_invoice = InvoiceItem.create!(item_id: @snorkel.id, invoice_id: @invoice_6.id, quantity: 11, unit_price: 400, status: 1, bulk_discount_id: @discount_price_1.id)
+      @snorkel_invoice = InvoiceItem.create!(item_id: @snorkel.id, invoice_id: @invoice_6.id, quantity: 11, unit_price: 400, status: 1, bulk_discount_id: @default_price_1.id)
 
 
       @transaction_1 = Transaction.create!(result: 1, invoice_id: @invoice_1.id, credit_card_number: 0001)
@@ -128,7 +129,23 @@ RSpec.describe Invoice, type: :model do
 
     describe '#discount_from_total_revenue(merchant_id)' do
       it 'gives us the the discount on total revenue generated from all of the merchant items on the invoice' do
+        expect(@invoice_6.discount_from_total_revenue(@surf_designs.id)).to eq(0)
+
+        @snorkel_invoice.update!(bulk_discount_id: @discount_price_2.id)
+
         expect(@invoice_6.discount_from_total_revenue(@surf_designs.id)).to eq(440)
+      end
+    end
+
+    describe '#admin_discount_from_total_revenue' do
+      it 'gives us the the discount on total revenue generated from all of the merchant items on the invoice' do
+        @snorkel_invoice.update!(bulk_discount_id: @discount_price_2.id)
+
+        expect(@invoice_6.admin_discount_from_total_revenue).to eq(440)
+
+        @emerald_invoice.update!(bulk_discount_id: @surprise_and_delight.id) #I know it's not applicable but just for the sake of calculation testing, this is being applied.
+
+        expect(@invoice_6.admin_discount_from_total_revenue).to eq(474)
       end
     end
   end

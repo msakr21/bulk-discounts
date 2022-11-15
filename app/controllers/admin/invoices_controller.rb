@@ -3,6 +3,7 @@ class Admin::InvoicesController < ApplicationController
     @invoice = Invoice.find(params[:id])
     @customer = @invoice.customer
     @total_revenue = (@invoice.admin_total_revenue.to_f / 100)
+    @discounted_total_revenue = @total_revenue - (@invoice.admin_discount_from_total_revenue.to_f)/100
     @invoice_items = @invoice.invoice_items
   end
 

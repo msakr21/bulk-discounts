@@ -8,6 +8,9 @@ RSpec.feature "Admin Invoice Show Page", type: :feature do
 
       @default_price_1 = @crystal_moon.bulk_discounts.create!(amount: 0, threshold:0)
       @default_price_2 = @surf_designs.bulk_discounts.create!(amount: 0, threshold:0)
+      @discount_price_1 = @crystal_moon.bulk_discounts.create!(amount: 10, threshold: 10)
+      @discount_price_2 = @surf_designs.bulk_discounts.create!(amount: 10, threshold: 10)
+      @surprise_and_delight = @crystal_moon.bulk_discounts.create!(amount: 20, threshold: 15)
 
       @pearl = @crystal_moon.items.create!(name: "Pearl", description: "Not a BlackPearl!", unit_price: 25)
       @moon_rock = @crystal_moon.items.create!(name: "Moon Rock", description: "Evolve Your Pokemon!", unit_price: 105)
@@ -71,7 +74,8 @@ RSpec.feature "Admin Invoice Show Page", type: :feature do
       @rash_guard_invoice = InvoiceItem.create!(item_id: @rash_guard.id, invoice_id: @invoice_13.id, quantity: 2, unit_price: 50, status: 2, bulk_discount_id: @default_price_2.id)
       @zinc_invoice = InvoiceItem.create!(item_id: @zinc.id, invoice_id: @invoice_14.id, quantity: 2, unit_price: 13, status: 1, bulk_discount_id: @default_price_2.id)
       @surf_board_invoice = InvoiceItem.create!(item_id: @surf_board.id, invoice_id: @invoice_6.id, quantity: 2, unit_price: 200, status: 1, bulk_discount_id: @default_price_2.id)
-      @snorkel_invoice = InvoiceItem.create!(item_id: @snorkel.id, invoice_id: @invoice_6.id, quantity: 3, unit_price: 400, status: 1, bulk_discount_id: @default_price_2.id)
+      @snorkel_invoice = InvoiceItem.create!(item_id: @snorkel.id, invoice_id: @invoice_6.id, quantity: 11, unit_price: 400, status: 1, bulk_discount_id: @default_price_1.id)
+
 
       @transaction_1 = Transaction.create!(result: 1, invoice_id: @invoice_1.id, credit_card_number: 0001)
       @transaction_2 = Transaction.create!(result: 1, invoice_id: @invoice_2.id, credit_card_number: 0002)
@@ -108,7 +112,7 @@ RSpec.feature "Admin Invoice Show Page", type: :feature do
     end
     it 'shows the total revenue that will be generated from the invoice' do
       visit admin_invoice_path(@invoice_6)
-      expect(page).to have_content("Total Revenue: $17.70")
+      expect(page).to have_content("Total Revenue: $49.70")
     end
 
     it "shows the list of items on the invoice along with the items' ordered quantity, price it was sold for and invoice item status" do
@@ -147,6 +151,20 @@ RSpec.feature "Admin Invoice Show Page", type: :feature do
 
       expect(current_path).to eq(admin_invoice_path(@invoice_15))
       expect(@invoice_15.reload.status).to eq("cancelled")
+    end
+
+    it 'shows the discounted total revenue that will be generated from the invoice' do
+      @snorkel_invoice.update!(bulk_discount_id: @discount_price_2.id)
+
+      visit admin_invoice_path(@invoice_6)
+
+      expect(page).to have_content("Discounted Total Revenue: $45.30")
+
+      @emerald_invoice.update!(bulk_discount_id: @surprise_and_delight.id)
+
+      visit admin_invoice_path(@invoice_6)
+
+      expect(page).to have_content("Discounted Total Revenue: $44.96")
     end
   end
 end

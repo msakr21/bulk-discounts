@@ -11,6 +11,7 @@
 <p>Created on <%=@invoice.created_at.strftime("%A, %B %e, %Y")%></p>
 <p>Customer: <%="#{@customer.first_name} #{@customer.last_name}"%></p>
 <p>Total Revenue: $<%= sprintf("%.2f", @total_revenue.round(2)) %></p>
+<p>Discounted Total Revenue: $<%= sprintf("%.2f", @discounted_total_revenue.round(2)) %></p>
 
 <div id="invoice_items">
   <h2>--- Items ---</h2>
