@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe 'bulk discounts index page' do
+RSpec.describe 'bulk_discount destroy' do
   before :each do
     @crystal_moon = Merchant.create!(name: "Crystal Moon Designs")
     @surf_designs = Merchant.create!(name: "Surf & Co. Designs")
@@ -116,32 +116,20 @@ RSpec.describe 'bulk discounts index page' do
     @transaction_23 = Transaction.create!(result: 1, invoice_id: @invoice_23.id, credit_card_number: 0016)
   end
 
-  it "displays a list of the merchant's bulk discounts" do
-    visit merchant_bulk_discounts_path(@crystal_moon)
-
-    expect(page).to have_content("10%, Quantity Threshold: 10")
-    expect(page).to have_link("10%")
-    expect(page).to have_content("20%, Quantity Threshold: 15")
-    expect(page).to have_link("20%")
-
-    visit merchant_bulk_discounts_path(@surf_designs)
-
-    expect(page).to have_content("15%, Quantity Threshold: 10")
-    expect(page).to have_link("15%")
-  end
-
-  it "has a link to create a new discount" do
-    visit merchant_bulk_discounts_path(@crystal_moon)
-
-    expect(page).to have_link("Create New Discount")
-    click_link "Create New Discount"
-    expect(current_path).to eql(new_merchant_bulk_discount_path(@crystal_moon))
-  end
-
-  it 'has a link next to each bulk discount to delete it' do
+  it 'it removes a bulk_discount record' do
     visit merchant_bulk_discounts_path(@crystal_moon)
     
-    expect(page).to have_link("Delete")
-    expect(page).to have_link("Delete")
+    expect(page).to have_content("10%")
+    expect(page).to have_content("20%")
+    expect(page).to have_link("Delete", count: 2)
+
+    within "#10" do
+      click_link "Delete"
+    end
+
+    expect(current_path).to eql(merchant_bulk_discounts_path(@crystal_moon))
+    expect(page).to_not have_content("10%")
+    expect(page).to have_content("20%")
+    expect(page).to have_link("Delete", count: 1)
   end
 end

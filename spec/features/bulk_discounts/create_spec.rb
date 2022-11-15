@@ -8,7 +8,6 @@ RSpec.describe 'create new merchant bulk discount' do
 
     visit merchant_bulk_discounts_path(crystal_moon)
 
-    expect(page).to have_link("No Discount")
     expect(page).to_not have_link("10%")
 
     visit new_merchant_bulk_discount_path(crystal_moon)
@@ -19,7 +18,6 @@ RSpec.describe 'create new merchant bulk discount' do
 
     expect(current_path).to eql(merchant_bulk_discounts_path(crystal_moon))
 
-    expect(page).to have_link("No Discount")
     expect(page).to have_link("10%")
   end
 end
