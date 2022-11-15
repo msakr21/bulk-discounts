@@ -12,6 +12,9 @@
     <p>Item Name: <%= item.name %></p>
     <p>Quantity: <%= @invoice.invoice_item(item.id).quantity %></p>
     <p>Selling Price: $<%=sprintf("%.2f", @invoice.invoice_item(item.id).unit_price.round(2))%> per unit</p>
+    <% if @total_revenue != @discounted_total_revenue %>
+    <p><%= link_to "Applied Bulk Discount", merchant_bulk_discount_path(@merchant, @invoice.invoice_item(item.id).bulk_discount_id) %></p>
+    <% end %>
     <%= form_with url: "/merchants/#{@merchant.id}/invoices/#{@invoice.id}", method: :patch, local: true do |form| %>
       <%= form.hidden_field :invoice_item_id, value: "#{@invoice.invoice_item(item.id).id}" %>
       <%= form.label "Status: " %>
