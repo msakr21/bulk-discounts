@@ -119,8 +119,6 @@ RSpec.describe 'bulk discounts index page', type: :feature do
   it "displays a list of the merchant's bulk discounts" do
     visit merchant_bulk_discounts_path(@crystal_moon)
 
-    expect(page).to have_content("No Discount, Quantity Threshold: 0")
-    expect(page).to have_link("No Discount")
     expect(page).to have_content("10%, Quantity Threshold: 10")
     expect(page).to have_link("10%")
     expect(page).to have_content("20%, Quantity Threshold: 15")
@@ -128,8 +126,6 @@ RSpec.describe 'bulk discounts index page', type: :feature do
 
     visit merchant_bulk_discounts_path(@surf_designs)
 
-    expect(page).to have_content("No Discount, Quantity Threshold: 0")
-    expect(page).to have_link("No Discount")
     expect(page).to have_content("15%, Quantity Threshold: 10")
     expect(page).to have_link("15%")
   end
