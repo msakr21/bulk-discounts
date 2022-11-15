@@ -12,10 +12,9 @@ class Invoice < ApplicationRecord
   end
 
   def total_revenue(merchant_id)
-    invoice_items
-    .joins(:item, :bulk_discount)
-    .where("items.merchant_id = ?", merchant_id)
-    .sum("quantity * invoice_items.unit_price")
+    invoice_items.joins(:item, :bulk_discount)
+                 .where("items.merchant_id = ?", merchant_id)
+                 .sum("quantity * invoice_items.unit_price")
   end
 
   def admin_total_revenue
@@ -23,6 +22,12 @@ class Invoice < ApplicationRecord
   end
 
   def discount_from_total_revenue(merchant_id)
-    invoice_items.joins(:item, :bulk_discount).where("items.merchant_id = ?", merchant_id).sum("quantity * invoice_items.unit_price * bulk_discounts.amount / 100")
+    invoice_items.joins(:item, :bulk_discount)
+                 .where("items.merchant_id = ? AND bulk_discounts.merchant_id = ?", merchant_id, merchant_id)
+                 .sum("quantity * invoice_items.unit_price * bulk_discounts.amount / 100")
+  end
+
+  def admin_discount_from_total_revenue
+    invoice_items.joins(:bulk_discount).sum("quantity * invoice_items.unit_price * bulk_discounts.amount / 100")
   end
 end
