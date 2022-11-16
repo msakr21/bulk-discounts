@@ -3,7 +3,7 @@
 <h3><%= @merchant.name %>: Information for Invoice #<%= @invoice.id %></h3>
 <p>Invoice: <%=@invoice.id%></p>
 <p>Status: <%=@invoice.status%></p>
-<p>Created On: <%=@invoice.created_at.strftime("%A, %B%e, %Y")%></p>
+<p>Created On: <%=@invoice.created_at.strftime("%A, %B %e, %Y")%></p>
 <p>Customer: <%=@invoice.customer.first_name%> <%=@invoice.customer.last_name%></p>
 
 <b>Items from <%= @merchant.name %> on this invoice:</b>
@@ -11,7 +11,7 @@
   <% if @merchant.id == item.merchant_id %>
     <p>Item Name: <%= item.name %></p>
     <p>Quantity: <%= @invoice.invoice_item(item.id).quantity %></p>
-    <p>Selling Price: $<%=sprintf("%.2f", @invoice.invoice_item(item.id).unit_price.round(2))%> per unit</p>
+    <p>Selling Price: $<%=sprintf("%.2f", @invoice.invoice_item(item.id).unit_price.to_f.round(2)/100)%> per unit</p>
     <% if @total_revenue != @discounted_total_revenue %>
     <p><%= link_to "Applied Bulk Discount", merchant_bulk_discount_path(@merchant, @invoice.invoice_item(item.id).bulk_discount_id) %></p>
     <% end %>

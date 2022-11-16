@@ -1,7 +1,21 @@
+require 'holiday_spec'
 require 'rails_helper'
 
 RSpec.describe 'bulk discounts index page' do
   before :each do
+    @response_body = "[{\"date\":\"2022-11-24\",\"localName\":\"Thanksgiving Day\",\"name\":\"Thanksgiving Day\",\"countryCode\":\"US\",\"fixed\":false,\"global\":true,\"counties\":null,\"launchYear\":1863,\"types\":[\"Public\"]},{\"date\":\"2022-12-26\",\"localName\":\"Christmas Day\",\"name\":\"Christmas Day\",\"countryCode\":\"US\",\"fixed\":false,\"global\":true,\"counties\":null,\"launchYear\":null,\"types\":[\"Public\"]},{\"date\":\"2023-01-02\",\"localName\":\"New Year's Day\",\"name\":\"New Year's Day\",\"countryCode\":\"US\",\"fixed\":false,\"global\":true,\"counties\":null,\"launchYear\":null,\"types\":[\"Public\"]},{\"date\":\"2023-01-16\",\"localName\":\"Martin Luther King, Jr. Day\",\"name\":\"Martin Luther King, Jr. Day\",\"countryCode\":\"US\",\"fixed\":false,\"global\":true,\"counties\":null,\"launchYear\":null,\"types\":[\"Public\"]},{\"date\":\"2023-02-20\",\"localName\":\"Presidents Day\",\"name\":\"Washington's Birthday\",\"countryCode\":\"US\",\"fixed\":false,\"global\":true,\"counties\":null,\"launchYear\":null,\"types\":[\"Public\"]}]"
+
+  @base_uri = "https://date.nager.at/api/v3/NextPublicHolidays/US"
+  
+  stub_request(:get, @base_uri).
+         with(
+           headers: {
+          'Accept'=>'*/*',
+          'Accept-Encoding'=>'gzip;q=1.0,deflate;q=0.6,identity;q=0.3',
+          'User-Agent'=>'Ruby'
+           }).
+         to_return(status: 200, body: @response_body, headers: {})
+
     @crystal_moon = Merchant.create!(name: "Crystal Moon Designs")
     @surf_designs = Merchant.create!(name: "Surf & Co. Designs")
     @merchant_3 = Merchant.create!(name: 'Outer Outfitters')
@@ -143,5 +157,16 @@ RSpec.describe 'bulk discounts index page' do
     
     expect(page).to have_link("Delete")
     expect(page).to have_link("Delete")
+  end
+
+  it 'has a section for upcoming holidays' do
+    holidays = Holiday.new.next_3_holidays
+
+    visit merchant_bulk_discounts_path(@crystal_moon)
+    
+    expect(page).to have_content("Upcoming Holidays")
+    expect(page).to have_content("Holiday: Thanksgiving Day, Date: 2022-11-24")
+    expect(page).to have_content("Holiday: Christmas Day, Date: 2022-12-26")
+    expect(page).to have_content("Holiday: New Year's Day, Date: 2023-01-02")
   end
 end
