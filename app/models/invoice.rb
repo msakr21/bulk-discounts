@@ -22,6 +22,7 @@ class Invoice < ApplicationRecord
   end
 
   def discount_from_total_revenue(merchant_id)
+    # binding.pry
     invoice_items.joins(:item, :bulk_discount)
                  .where("items.merchant_id = ? AND bulk_discounts.merchant_id = ?", merchant_id, merchant_id)
                  .sum("quantity * invoice_items.unit_price * bulk_discounts.amount / 100")
