@@ -7,7 +7,7 @@
     <% @bulk_discounts.each do |discount|%>
       <% if discount.amount != 0 %>
       <div id=<%= "#{discount.amount}" %>>
-        <p> <%= link_to "#{discount.amount}%", merchant_bulk_discount_path(@merchant, discount)%>, <%= "Quantity Threshold: #{discount.threshold}" %> <%= link_to "Delete", "/merchants/#{@merchant.id}/bulk_discounts/#{discount.id}", method: :delete%></p>
+        <p> <%= link_to "#{discount.amount}%", merchant_bulk_discount_path(@merchant, discount)%>, <%= "Quantity Threshold: #{discount.threshold}" %> <% if discount.pending_invoices? == false %> <%= link_to "Delete", "/merchants/#{@merchant.id}/bulk_discounts/#{discount.id}", method: :delete%> <%end%></p>
       <%end%>
       </div>
     <%end%>
