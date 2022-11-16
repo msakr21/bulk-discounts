@@ -1,3 +1,4 @@
+require 'holiday_spec'
 require 'rails_helper'
 
 RSpec.describe 'bulk discounts index page' do
@@ -143,5 +144,15 @@ RSpec.describe 'bulk discounts index page' do
     
     expect(page).to have_link("Delete")
     expect(page).to have_link("Delete")
+  end
+
+  it 'has a section for upcoming holidays' do
+    holidays = Holiday.new.next_3_holidays
+
+    visit merchant_bulk_discounts_path(@crystal_moon)
+    
+    expect(page).to have_content("Delete")
+    expect(page).to have_content("Delete")
+    expect(page).to have_content("Delete")
   end
 end
