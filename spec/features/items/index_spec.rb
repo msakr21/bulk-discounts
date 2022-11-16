@@ -221,7 +221,7 @@ RSpec.describe 'merchant items index page', type: :feature do
         expect("Moon Rock").to appear_before("Emerald")
         expect("Emerald").to appear_before("Ruby")
         expect("Ruby").to appear_before("Amethyst")
-        expect("Amethyst").to appear_before("Topaz")
+        expect("Ruby").to appear_before("Topaz")
       end
 
       it "s top 5 items' names are links to their respective pages" do
