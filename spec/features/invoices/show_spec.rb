@@ -108,7 +108,7 @@ RSpec.describe 'merchant invoices show page' do
 
         expect(page).to have_content("Invoice: #{@invoice_12.id}")
         expect(page).to have_content("Status: #{@invoice_12.status}")
-        expect(page).to have_content("Created On: #{@invoice_12.created_at.strftime("%A, %B%e, %Y")}")
+        expect(page).to have_content("Created On: #{@invoice_12.created_at.strftime("%A, %B %e, %Y")}")
         expect(page).to have_content("Customer: #{@invoice_12.customer.first_name} #{@invoice_12.customer.last_name}")
       end
 
@@ -118,7 +118,7 @@ RSpec.describe 'merchant invoices show page' do
 
         expect(page).to have_content("Item Name: #{@emerald.name}")
         expect(page).to have_content("Quantity: #{@emerald_invoice.quantity}")
-        expect(page).to have_content("Selling Price: $#{sprintf("%.2f", @emerald_invoice.unit_price.round(2))} per unit")
+        expect(page).to have_content("Selling Price: $#{sprintf("%.2f", @emerald_invoice.unit_price.to_f.round(2)/100)} per unit")
         expect(page).to have_select("status", selected: "Shipped")
       end
 

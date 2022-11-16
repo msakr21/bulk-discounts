@@ -1,6 +1,7 @@
 class BulkDiscount < ApplicationRecord
   belongs_to :merchant
-  has_many :invoice_items, through: :merchant
+  has_many :invoice_items
+  has_many :invoices, through: :invoice_items
 
   def update_matching_invoice_items
     InvoiceItem.joins(:item, :invoice, :bulk_discount)

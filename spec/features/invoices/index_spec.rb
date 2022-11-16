@@ -99,7 +99,6 @@ RSpec.describe 'merchant invoices index page' do
       end
 
       it ' lists all of my invoices that have at least one of my items as links that direct to their show pages' do
-       
         visit merchant_invoices_path(@surf_designs)
         
         expect(page).to have_content("Surf & Co. Designs Invoices")
@@ -112,7 +111,7 @@ RSpec.describe 'merchant invoices index page' do
         
         click_link "Invoice: #{@invoice_12.id}"
 
-        expect(current_path).to eq(merchant_invoices_path(@surf_designs, @invoice_12))
+        expect(current_path).to eq(merchant_invoice_path(@surf_designs, @invoice_12))
       end
     end
   end
