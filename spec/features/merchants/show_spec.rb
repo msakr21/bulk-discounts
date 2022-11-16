@@ -170,7 +170,7 @@ RSpec.describe "the merchant's dashboard page" do
   it "displays the date that each invoice was created, ordered from oldest to newest" do
     visit "/merchants/#{@crystal_moon.id}/dashboard"
 
-    expect(page).to have_content(@crystal_moon.items_ready_to_ship.first[:created_at].strftime("%A, %B%e, %Y"))
+    expect(page).to have_content(@crystal_moon.items_ready_to_ship.first[:created_at].strftime("%A, %B %e, %Y"))
 
     expect("Pearl").to appear_before("Moon Rock")
     expect("Moon Rock").to appear_before("Lapis Lazuli")

@@ -117,14 +117,12 @@ RSpec.describe BulkDiscount, type: :model do
       surprise_and_delight = @surf_designs.bulk_discounts.create!(amount: 20, threshold: 15)
 
       expect(surprise_and_delight.update_matching_invoice_items).to eq(1)
-    end
 
-    it "updates all invoice items that haven't been shipped, are part of incomplete invoices, and whose quantity exceeds the merchant's bulk discount thresholds but whose current bulk_discount threshold is not higher" do
-      expect(@discount_price_1.update_matching_invoice_items).to eq(3)
+      surprise_and_delight_2 = @surf_designs.bulk_discounts.create!(amount: 20, threshold: 10)
 
-      surprise_and_delight = @surf_designs.bulk_discounts.create!(amount: 20, threshold: 15)
+      expect(surprise_and_delight_2.update_matching_invoice_items).to eq(2)
 
-      expect(surprise_and_delight.update_matching_invoice_items).to eq(1)
+      expect(@bigger_discount_1.update_matching_invoice_items).to eq(0)
     end
 
     it "has a method 'pedning_invoices?' that returns true if there are pending invoices on a discount and false if there are none" do

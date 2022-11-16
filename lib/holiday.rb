@@ -1,8 +1,6 @@
 require 'httparty'
 require 'json'
 
-
-
 class Holiday
 
   def call(url)
