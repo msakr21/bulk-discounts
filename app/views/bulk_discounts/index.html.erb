@@ -14,3 +14,10 @@
 </div>
 
 <%= link_to "Create New Discount", new_merchant_bulk_discount_path(@merchant) %>
+
+<div id="upcoming_holidays">
+  <h2>--- Upcoming Holidays ---</h2>
+    <% @holidays.each do |holiday, date| %>
+    <p> Holiday: <%= holiday %>, Date:  <%= date %> </p>
+    <%end%>
+</div>
