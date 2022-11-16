@@ -131,4 +131,12 @@ RSpec.describe 'bulk discounts show page' do
 
     expect(page).to have_link("Edit Discount")
   end
+
+  it "does not display a link to edit the discount if discount is pending" do
+    moon_rock_invoice_3 = InvoiceItem.create!(item_id: @moon_rock.id, invoice_id: @invoice_15.id, quantity: 2, unit_price: 105, status: 1, bulk_discount_id: @discount_price_1.id)
+
+    visit merchant_bulk_discount_path(@crystal_moon, @discount_price_1)
+   
+    expect(page).to_not have_link("Edit Discount")
+  end
 end
