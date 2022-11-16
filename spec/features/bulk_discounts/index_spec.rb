@@ -155,8 +155,7 @@ RSpec.describe 'bulk discounts index page' do
   it 'has a link next to each bulk discount to delete it' do
     visit merchant_bulk_discounts_path(@crystal_moon)
     
-    expect(page).to have_link("Delete")
-    expect(page).to have_link("Delete")
+    expect(page).to have_link("Delete", count: 2)
   end
 
   it 'has a section for upcoming holidays' do
@@ -168,5 +167,17 @@ RSpec.describe 'bulk discounts index page' do
     expect(page).to have_content("Holiday: Thanksgiving Day, Date: 2022-11-24")
     expect(page).to have_content("Holiday: Christmas Day, Date: 2022-12-26")
     expect(page).to have_content("Holiday: New Year's Day, Date: 2023-01-02")
+  end
+
+  it 'does not display a delete link next to discounts that have pending invoices' do
+    moon_rock_invoice_3 = InvoiceItem.create!(item_id: @moon_rock.id, invoice_id: @invoice_15.id, quantity: 2, unit_price: 105, status: 1, bulk_discount_id: @discount_price_1.id)
+
+    visit merchant_bulk_discounts_path(@crystal_moon)
+
+    expect(page).to have_link("Delete", count: 1)
+
+    within "#10" do
+      expect(page).to_not have_link("Delete")
+    end
   end
 end

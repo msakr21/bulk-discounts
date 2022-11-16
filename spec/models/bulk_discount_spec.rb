@@ -15,6 +15,9 @@ RSpec.describe BulkDiscount, type: :model do
       @default_price_1 = @crystal_moon.bulk_discounts.create!(amount: 0, threshold:0)
       @default_price_2 = @surf_designs.bulk_discounts.create!(amount: 0, threshold:0)
       @discount_price_1 = @surf_designs.bulk_discounts.create!(amount: 10, threshold: 10)
+      @discount_price_2 = @crystal_moon.bulk_discounts.create!(amount: 10, threshold: 10)
+      @bigger_discount_1 = @surf_designs.bulk_discounts.create!(amount: 15, threshold: 15)
+
       
   
       @pearl = @crystal_moon.items.create!(name: "Pearl", description: "Not a BlackPearl!", unit_price: 25)
@@ -122,6 +125,18 @@ RSpec.describe BulkDiscount, type: :model do
       surprise_and_delight = @surf_designs.bulk_discounts.create!(amount: 20, threshold: 15)
 
       expect(surprise_and_delight.update_matching_invoice_items).to eq(1)
+    end
+
+    it "has a method 'pedning_invoices?' that returns true if there are pending invoices on a discount and false if there are none" do
+      sapphire_invoice_2 = InvoiceItem.create!(item_id: @sapphire.id, invoice_id: @invoice_15.id, quantity: 12, unit_price: 45, status: 2, bulk_discount_id: @discount_price_2.id)
+
+      wax_invoice_2 = InvoiceItem.create!(item_id: @wax.id, invoice_id: @invoice_12.id, quantity: 2, unit_price: 7, status: 2, bulk_discount_id: @bigger_discount_1.id)
+
+      expect(@discount_price_2.pending_invoices?).to eq(true)
+
+      expect(@discount_price_1.pending_invoices?).to eq(false)
+
+      expect(@bigger_discount_1.pending_invoices?).to eq(false)
     end
   end
 end
